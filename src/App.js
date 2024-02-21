@@ -14,38 +14,38 @@ function App() {
       console.log("file", e.target.files);
     }
   };
-  // const pdfGenerate = (e) =>{
-  //   fetch(e, {
-  //     mode: 'no-cors'
-  //   })
-  //   .then(response => response.blob())
-  //   .then(blob => {
-  //     // Do something with the PDF blob, like displaying it in an <embed> element
-  //     const url = URL.createObjectURL(blob);
-  //     // Example: Display PDF in an <embed> element
-  //     document.getElementById('pdf-viewer').setAttribute('src', url);
-  //     console.log("url",url)
-  //   })
-  //   .catch(error => {
-  //     console.error('Error fetching PDF:', error);
-  //   });
-  // }
   const pdfGenerate = (e) =>{
-    const requestOptions = {
-      method: "GET",
-      redirect: "follow",
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      },
-    };
-    
-    fetch(e, requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        setPdfValue(result)
-        console.log("res 2", result)})
-      .catch((error) => console.error(error));
+    fetch(e, {
+      mode: 'no-cors'
+    })
+    .then(response => response.blob())
+    .then(blob => {
+      // Do something with the PDF blob, like displaying it in an <embed> element
+      const url = URL.createObjectURL(blob);
+      // Example: Display PDF in an <embed> element
+      document.getElementById('pdf-viewer').setAttribute('src', url);
+      console.log("url",url)
+    })
+    .catch(error => {
+      console.error('Error fetching PDF:', error);
+    });
   }
+  // const pdfGenerate = (e) =>{
+  //   const requestOptions = {
+  //     method: "GET",
+  //     redirect: "follow",
+  //     headers: {
+  //       "Access-Control-Allow-Origin": "*"
+  //     },
+  //   };
+    
+  //   fetch(e, requestOptions)
+  //     .then((response) => response.text())
+  //     .then((result) => {
+  //       setPdfValue(result)
+  //       console.log("res 2", result)})
+  //     .catch((error) => console.error(error));
+  // }
   const onSubmit = (e) => {
     e.preventDefault();
     const form = new FormData();
