@@ -5,7 +5,7 @@ import { useState } from "react";
 function App() {
   const [pdfFile, setPdfFile] = useState([]);
   const [pdfLink, setPdfLink] = useState("");
-  const [pdfValue, setPdfValue] = useState("");
+  const [pdfValue, setPdfValue] = useState(null);
 
   const handleFileChange = (e) => {
     console.log("e", e);
@@ -14,6 +14,38 @@ function App() {
       console.log("file", e.target.files);
     }
   };
+  // const pdfGenerate = (e) =>{
+  //   fetch(e, {
+  //     mode: 'no-cors'
+  //   })
+  //   .then(response => response.blob())
+  //   .then(blob => {
+  //     // Do something with the PDF blob, like displaying it in an <embed> element
+  //     const url = URL.createObjectURL(blob);
+  //     // Example: Display PDF in an <embed> element
+  //     document.getElementById('pdf-viewer').setAttribute('src', url);
+  //     console.log("url",url)
+  //   })
+  //   .catch(error => {
+  //     console.error('Error fetching PDF:', error);
+  //   });
+  // }
+  const pdfGenerate = (e) =>{
+    const requestOptions = {
+      method: "GET",
+      redirect: "follow",
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+    };
+    
+    fetch(e, requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        setPdfValue(result)
+        console.log("res 2", result)})
+      .catch((error) => console.error(error));
+  }
   const onSubmit = (e) => {
     e.preventDefault();
     const form = new FormData();
@@ -24,17 +56,21 @@ function App() {
 
     const options = {
       method: "POST",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+      // headers: {
+      //   "Content-Type": "multipart/form-data",
+      // },
     };
     options.body = form;
     fetch(
       "https://esign.digitalsignature.com.bd:4040/mqtt-1.0/genqrpdf",
       options
     )
-      .then((response) => response.json())
-      .then((response) => console.log(response))
+      .then((response) => response.text())
+      .then((response) => {
+        let result = response.substr(32)
+        pdfGenerate(result)
+        console.log(result)
+      })
       .catch((err) => console.error(err));
   };
   return (
@@ -97,6 +133,11 @@ function App() {
             </div>
           </div>
         </form>
+        {pdfValue !== null &&
+        <div>
+        <iframe id="pdf-viewer" src={pdfValue} width="100%" height="600px" style={{border: "none"}}></iframe>
+        </div>
+}
       </div>
     </div>
   );
