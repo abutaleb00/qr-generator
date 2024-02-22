@@ -7,6 +7,7 @@ function App() {
   const [pdfLink, setPdfLink] = useState("");
   const [pdfValue, setPdfValue] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -36,11 +37,13 @@ function App() {
         let result = response.substr(32);
         var secureUrl = result.replace("http://", "https://");
         setPdfValue(secureUrl);
-        console.log(result);
+        console.log("rrr", result);
       })
       .catch((err) => {
         setLoading(false);
-        console.error(err);
+        console.error("eeeee",err);
+        setPdfValue(null)
+        setError(err);
       });
   };
 
@@ -133,6 +136,11 @@ function App() {
             >
               Upload Another PDF
             </button>
+          </div>
+        )}
+        {error && (
+          <div>
+            <p>{error}</p>
           </div>
         )}
         {pdfValue !== null && (
